@@ -51,6 +51,18 @@ def cloneDatabase(pathToDatabase):
         mycursor.execute(stm)
     mydb.commit()
 
+def changeDtbConfig(folderName, databaseName):
+    """
+    Заменяет тэг <DATABASE> в файле dtb.php на название созданной бд 
+    """
+    with open(folderName+'/dtb/dtb.php') as f:
+        configFile = f.read()
+
+    with open(folderName+'/dtb/dtb.php', 'w') as f:
+        print('Запись в dtb.php созданной бд...\n')
+        configFile = configFile.replace('<DATABASE>', databaseName)
+        f.write(configFile)
+
 if '-h' in sys.argv:
     print(help)
 else:
@@ -81,6 +93,7 @@ else:
     mycursor = mydb.cursor()
 
     insertData(newFolderPath, projectNameS)
-    cloneDatabase('sdo_server.sql', projectNameS)
-    print("New folder: {}\nArgument list:{}".format(newFolderPath, str(sys.argv)))
+    cloneDatabase('sdo_server.sql')
+    changeDtbConfig(newFolderPath, projectNameS)
+    print("Название папки: {}\nЛист аргументов: {}\n".format(newFolderPath, str(sys.argv)))
 
